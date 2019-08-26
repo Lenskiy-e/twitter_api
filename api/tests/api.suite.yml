@@ -1,0 +1,8 @@
+suite_namespace: api\tests
+actor: ApiTester
+modules:
+  enabled:
+    - REST:
+        depends: PhpBrowser
+        url: 'http://api.test/'
+        part: Json

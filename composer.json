@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "guzzle/http": "^3.7@dev",
-        "yiisoft/yii2-authclient": "*"
+        "yiisoft/yii2-authclient": "*",
+        "guzzlehttp/guzzle": "^6.3@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

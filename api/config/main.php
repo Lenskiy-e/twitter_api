@@ -51,8 +51,8 @@ return [
                     'attributeParams' => [
                         'include_email' => 'true'
                     ],
-                    'consumerKey' => 'yGKW0DCbEkzrv7kg66XTtQhFF',
-                    'consumerSecret' => 'WMTe9sCXuSBJWTAhlzziTxCefwXMvKQl7seB6e7TEg4arQAGIZ',
+                    'consumerKey' => '',
+                    'consumerSecret' => '',
                 ],
             ],
         ],

@@ -4,6 +4,7 @@
 namespace api\controllers;
 
 
+use api\models\RequestSessions;
 use api\models\Subscribers;
 use api\services\TwitterPlugin;
 use yii\rest\Controller;
@@ -21,19 +22,26 @@ class ApiController extends Controller
      */
     private $subscribers;
 
+    /**
+     * @var RequestSessions
+     */
+    private $sessions;
+
 
     /**
      * ApiController constructor.
      * @param $id
      * @param $module
      * @param Subscribers $subscribers
+     * @param RequestSessions $sessions
      * @param array $config
      */
-    public function __construct($id, $module, Subscribers $subscribers, $config = [])
+    public function __construct($id, $module, Subscribers $subscribers, RequestSessions $sessions, $config = [])
     {
         $this->request = \Yii::$app->request;
 
         $this->subscribers = $subscribers;
+        $this->sessions = $sessions;
 
         parent::__construct($id, $module, $config);
     }
@@ -57,18 +65,24 @@ class ApiController extends Controller
      */
     public function actionAdd() : ? array
     {
-        try
-        {
+        try {
             // get and check request parameters
 
             $params = $this->getParameters(['id', 'user', 'secret']);
 
 
-            if( empty($params) )
-            {
+            if (empty($params)) {
                 $this->setStatus(500);
                 return [
                     'error' => 'missing parameter'
+                ];
+            }
+
+            if ( !$this->checkId($params['id']) )
+            {
+                $this->setStatus(500);
+                return [
+                    'error' => 'error id'
                 ];
             }
 
@@ -119,6 +133,14 @@ class ApiController extends Controller
                 $this->setStatus(500);
                 return [
                     'error' => 'missing parameter'
+                ];
+            }
+
+            if ( !$this->checkId($params['id']) )
+            {
+                $this->setStatus(500);
+                return [
+                    'error' => 'error id'
                 ];
             }
 
@@ -173,6 +195,14 @@ class ApiController extends Controller
                 $this->setStatus(500);
                 return [
                     'error' => 'missing parameter'
+                ];
+            }
+
+            if ( !$this->checkId($params['id']) )
+            {
+                $this->setStatus(500);
+                return [
+                    'error' => 'error id'
                 ];
             }
 
@@ -253,5 +283,29 @@ class ApiController extends Controller
     private function setStatus(int $status)
     {
         return \Yii::$app->response->setStatusCode($status);
+    }
+
+    /**
+     * Check if id is valid
+     * @param string $id
+     * @return bool
+     */
+    private function checkId(string $id) : bool
+    {
+        if (strlen($id) !== 32) {
+            return false;
+        }
+
+        $user_session = $this->sessions::find()->where(['key' => $id])->count();
+
+        if ($user_session)
+        {
+            return false;
+        }
+
+        $this->sessions->key =  $id;
+        $this->sessions->save();
+
+        return true;
     }
 }
